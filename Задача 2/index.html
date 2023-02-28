@@ -1,0 +1,114 @@
+<html>
+<head>
+	<title>Задача 1</title>
+</head>
+<body>
+	<script>
+
+const BigNumber = {
+  add(a, b) {
+    let carry = 0;
+    const result = [];
+    let i = a.length - 1;
+    let j = b.length - 1;
+
+    while (i >= 0 || j >= 0 || carry) {
+      const sum = (parseInt(a[i]) || 0) + (parseInt(b[j]) || 0) + carry;
+      result.unshift(sum % 10);
+      carry = Math.floor(sum / 10);
+      i--;
+      j--;
+    }
+
+    return result.join('');
+  },
+
+  multiply(a, b) {
+    const product = [];
+    let i = a.length - 1;
+    let j = b.length - 1;
+
+    for (i; i >= 0; i--) {
+      let carry = 0;
+      const row = [];
+
+      for (j; j >= 0; j--) {
+        const product = parseInt(a[i]) * parseInt(b[j]) + carry;
+        row.unshift(product % 10);
+        carry = Math.floor(product / 10);
+      }
+
+      if (carry > 0) {
+        row.unshift(carry);
+      }
+
+      const zeros = Array(a.length - i - 1).fill(0);
+      row.push(...zeros);
+      product.push(row);
+      j = b.length - 1;
+    }
+
+    const result = product.reduce((a, b) => BigNumber.add(a, b.join('')), '0');
+
+    return result.replace(/^0+(?=\d)/, '');
+  },
+
+  subtract(a, b) {
+    let carry = 0;
+    const result = [];
+    let i = a.length - 1;
+    let j = b.length - 1;
+    
+    if (i < j) {
+    return '-' + BigNumber.subtract(b, a); // обрабатываем случай a < b, вернув отрицательный результат
+    }
+      
+    while (i >= 0 || j >= 0) {
+      let diff = (parseInt(a[i]) || 0) - (parseInt(b[j]) || 0) - carry;
+
+      if (diff < 0) {
+        diff += 10;
+        carry = 1;
+      } else {
+        carry = 0;
+      }
+
+      result.unshift(diff);
+      i--;
+      j--;
+    }
+
+    return result.join('').replace(/^0+(?=\d)/, '');
+  },
+
+  divide(a, b) {
+    const aDigits = a.split('').map(Number);
+    let tempDividend = 0;
+    const result = [];
+
+    for (let i = 0; i < aDigits.length; i++) {
+      tempDividend = tempDividend * 10 + aDigits[i];
+      const quotient = Math.floor(tempDividend / b);
+
+      if (quotient > 0 || result.length > 0) {
+        result.push(quotient);
+      }
+
+      tempDividend -= quotient * b;
+    }
+
+    return result.length > 0 ? result.join('') : '0';
+  }
+};
+
+const a = '456';
+const b = '543';
+
+alert(sum = BigNumber.add(a, b));
+alert(product = BigNumber.multiply(a, b)); 
+alert(difference = BigNumber.subtract(a, b));
+alert(division = BigNumber.divide(a, b));
+
+	</script>
+</body>
+</html>

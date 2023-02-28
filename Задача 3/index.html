@@ -1,0 +1,66 @@
+<html>
+<head>
+	<title>Задача 1</title>
+</head>
+<body>
+	<script>
+class Product {
+  constructor(name, price, quantity, description) {
+    this.name = name;
+    this.price = price;
+    this.quantity = quantity;
+    this.description = description;
+  }
+}
+
+const products = [
+  new Product("apple", 1.2, 5, "A sweet fruit"),
+  new Product("banana", 0.8, 3, "A long yellow fruit"),
+  new Product("orange", 1.5, 2, "A citrus fruit"),
+  new Product("grape", 2.3, 1, "A small fruit"),
+  new Product("pear", 1.8, 4, "A juicy fruit")
+];
+
+function filterProducts(products, queryString) {
+  const queryParts = queryString.split("&");
+
+  return products.filter(product => {
+    return queryParts.every(queryPart => {
+      const [property, operator, value] = queryPart.split("-");
+      const productValue = product[property];
+
+      switch (operator) {
+        case "contains":
+          return productValue.includes(value);
+        case "starts":
+          return productValue.startsWith(value);
+        case "ends":
+          return productValue.endsWith(value);
+        case "<":
+          return productValue < parseFloat(value);
+        case "<=":
+          return productValue <= parseFloat(value);
+        case "=":
+          return productValue === value;
+        case ">=":
+          return productValue >= parseFloat(value);
+        case ">":
+          return productValue > parseFloat(value);
+        default:
+          return true;
+      }
+    });
+  });
+}
+
+// Пример использования:
+const filteredProducts = filterProducts(
+  products,
+  "name-contains-a&price<=1.5&quantity>=3&description-ends-fruit"
+);
+console.log(filteredProducts); // [Product { name: 'apple', price: 1.2, quantity: 5, description: 'A sweet fruit' }]
+
+
+	</script>
+</body>
+</html>
